@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
@@ -10,13 +10,16 @@ import { Observable } from 'rxjs';
 })
 export class TestComponent implements OnInit {
   myForm: FormGroup;
+  myFiled: FormControl;
 
-  // search$ = new Observable((observer) => {
-  //   console.log('Start in observable');
-  //   const myFiled = this.myForm.controls['controlSearch']
-  //   console.log(myFiled.value);
-  //     // console.log(this.myForm.value);
-  //     // myFiled?.addEventListener('input', (event) => {
+  search$ = new Observable((observer) => {
+    console.log('Start in observable');
+    this.myFiled.valueChanges.subscribe((val) => {
+      console.log('Value has changed');
+      observer.next(val);
+    });
+  });
+  //myFiled?.addEventListener('input', (event) => {
   //     //   observer.next(event);
   //     });
   //     console.log('End in observable');
@@ -26,14 +29,15 @@ export class TestComponent implements OnInit {
     this.myForm = this.fb.group({
       controlSearch: '',
     });
+    this.myFiled = this.myForm.controls['controlSearch'] as FormControl;
   }
 
   ngOnInit(): void {
     console.log('Start subscribe');
 
-    // this.search$.subscribe((value) => {
-    //   console.log(value);
-    // });
+    this.search$.subscribe((value) => {
+      console.log(value);
+    });
 
     console.log('End subscribe');
   }
